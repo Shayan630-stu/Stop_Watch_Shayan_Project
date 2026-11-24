@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Stopwatch</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #243b55;
+        }
+
+        .timer {
+            font-size: 38px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #141e30;
+        }
+
+        button {
+            padding: 12px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        #start {
+            background: #28a745;
+        }
+
+        #pause {
+            background: #ff9800;
+        }
+
+        #reset {
+            background: #dc3545;
+        }
+
+        #lap {
+            background: #007bff;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        h3 {
+            margin-top: 25px;
+            color: #243b55;
+        }
+
+        #laps {
+            margin-top: 15px;
+            list-style: none;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        #laps li {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Stopwatch</h1>
+
+        <div class="timer" id="display">
+            00:00:00
+        </div>
+
+        <button id="start" onclick="startWatch()">Start</button>
+
+        <button id="pause" onclick="pauseWatch()">Pause</button>
+
+        <button id="reset" onclick="resetWatch()">Reset</button>
+
+        <button id="lap" onclick="lapWatch()">Lap</button>
+
+        <h3>Lap Times</h3>
+
+        <ul id="laps"></ul>
+
+    </div>
+
+    <script>
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+
+        let interval = null;
+
+        function updateDisplay() {
+
+            seconds++;
+
+            if (seconds == 60) {
+                seconds = 0;
+                minutes++;
+            }
+
+            if (minutes == 60) {
+                minutes = 0;
+                hours++;
+            }
+
+            let h = String(hours).padStart(2, '0');
+            let m = String(minutes).padStart(2, '0');
+            let s = String(seconds).padStart(2, '0');
+
+            document.getElementById("display").innerText =
+                h + ":" + m + ":" + s;
+        }
+
+        function startWatch() {
+
+            if (interval !== null) {
+                return;
+            }
+
+            interval = setInterval(updateDisplay, 1000);
+        }
+
+        function pauseWatch() {
+
+            clearInterval(interval);
+            interval = null;
+        }
+
+        function resetWatch() {
+
+            clearInterval(interval);
+            interval = null;
+
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+
+            document.getElementById("display").innerText = "00:00:00";
+
+            document.getElementById("laps").innerHTML = "";
+        }
+
+        function lapWatch() {
+
+            if (interval === null) {
+                return;
+            }
+
+            let time = document.getElementById("display").innerText;
+
+            let li = document.createElement("li");
+
+            li.innerText = "Lap: " + time;
+
+            document.getElementById("laps").appendChild(li);
+        }
+
+    </script>
+
+</body>
+</html>
